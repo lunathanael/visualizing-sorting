@@ -3,11 +3,12 @@
 #include <iostream>
 #include <numeric>
 #include <iterator>
+#include <random>
 #include <vector>
 
 #include <SFML/Graphics.hpp>
-#include <src/sorting.hpp>
-#include <random>
+
+#include "sorting.hpp"
 
 constexpr int screen_width = 800;
 constexpr int screen_height = 600;
@@ -49,17 +50,23 @@ public:
 };
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "Sorting");
+    sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "Sorting", sf::Style::Close);
     window.setFramerateLimit(60);
 
     Sorter sorter;
-    do
-    {
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+        }
+
         window.clear();
         window.draw(sorter);
         window.display();
     }
-    while(1);
-    std::cout << "Sorted.\n";
+
     return 0;
 }
