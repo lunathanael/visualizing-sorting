@@ -68,31 +68,13 @@ bool vis::QuickSort<T>::next()
     }
     if(i == pivot)
     {
-        return false;
+        QuickSort l{itr1, i};
+        std::advance(i, 1);
+        QuickSort r{i, itr2};
+        return (l.next() || r.next());
     }
     std::iter_swap(i, pivot);
-}
-
-void quick_sort(int* first, int* last, CMP cmp) {
-	if (first < last) {
-		int pivot = *first;
-		int* i = first; int* j = first + 1;
-		while (j < last) {
-			if (cmp(*j, pivot)) {
-				++i;
-				int temp = *i;
-				*i = *j;
-				*j = temp;
-			}
-			++j;
-		}
-		int temp = *i;
-		*i = *first;
-		*first = temp;
-		quick_sort(first, i, cmp);
-		quick_sort(i + 1, last, cmp);
-	}
-	return;
+    return false;
 }
 
 
