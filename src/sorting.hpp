@@ -4,7 +4,7 @@
 #include <random>
 #include <algorithm>
 #include <iterator>
-
+#include<iostream>
 namespace vis
 {
 
@@ -15,11 +15,19 @@ namespace vis
         T itr1;
         T itr2;
 
+        T pivot, i, j;
+        bool pivoted;
+        QuickSort<T>* l;
+        QuickSort<T>* r;
+
     public:
         QuickSort(const T begin, const T end)
             : itr1(begin)
             , itr2(end)
-        {};
+            , pivoted(false)
+        {
+            pivot = itr1, i = itr1, j = std::next(itr1, 1);
+        };
 
         bool next();
     };
@@ -48,32 +56,32 @@ namespace vis
 template <typename T>
 bool vis::QuickSort<T>::next()
 {
-    if(itr1 >= itr2)
+    if(std::distance(itr1, itr2) < 1)
     {
         return true;
     }
 
-    T pivot = itr1, i = itr1, j = itr1;
-    std::advance(j, 1);
-    while (j < itr2)
+    if(pivoted)
+    {
+        return (l->next() && r->next());
+    }
+
+    while (std::distance(j, itr2) > 0)
     {
         if((*j) < (*pivot))
         {
             std::advance(i, 1);
-            std::iter_swap(i, j);
-            ++j;
+            std::swap(*i, *j);
+            std::advance(j,1);
             return false;
         }
-        ++j;
-    }
-    if(i == pivot)
-    {
-        QuickSort l{itr1, i};
-        std::advance(i, 1);
-        QuickSort r{i, itr2};
-        return (l.next() || r.next());
+        std::advance(j, 1);
     }
     std::iter_swap(i, pivot);
+    l = new QuickSort{itr1, i};
+    r = new QuickSort{std::next(i, 1), itr2};
+    pivoted = true;
+
     return false;
 }
 

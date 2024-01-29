@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <iostream>
 #include <numeric>
+#include <vector>
 
 #include <SFML/Graphics.hpp>
 #include <src/sorting.hpp>
@@ -12,16 +13,20 @@ constexpr int screen_height = 600;
 
 class Sorter : public sf::Drawable {
 private:
-    std::array<int, 5> m_data;
+    std::vector<int> m_data;
     std::mt19937 gen;
+    vis::QuickSort<std::vector<int>::iterator> *q;
 
 public:
-    Sorter() {
+    Sorter()
+    {
+        m_data.resize(500);
         std::iota(m_data.begin(), m_data.end(), 0);
+        std::shuffle(m_data.begin(), m_data.end(), gen);
+        q = new vis::QuickSort{m_data.begin(), m_data.end()};
     }
 
-    void shuffle() {std::shuffle(m_data.begin(), m_data.end(), gen); };
-    bool is_sorted() const {return std::is_sorted(m_data.begin(), m_data.end()); };
+    inline bool next() {return q->next(); };
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override {
         // origin = bottom left
@@ -41,13 +46,14 @@ int main() {
     window.setFramerateLimit(60);
 
     Sorter sorter;
+    bool progress = false;
     do
     {
-        sorter.shuffle();
+        progress = sorter.next();
         window.clear();
         window.draw(sorter);
         window.display();
     }
-    while(!sorter.is_sorted());
+    while(!progress);
     return 0;
 }
