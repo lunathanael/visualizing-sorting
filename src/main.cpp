@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <iostream>
 #include <numeric>
+#include <iterator>
 #include <vector>
 
 #include <SFML/Graphics.hpp>
@@ -30,14 +31,20 @@ public:
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override {
         // origin = bottom left
-        for (std::size_t i = 0; i < m_data.size(); ++i) {
+        auto itr = q->next();
+        for (auto it = m_data.begin(); it != m_data.end(); std::advance(it, 1)) {
             int width = screen_width / m_data.size();
-            int height = (screen_height / m_data.size()) * m_data[i];
+            int height = (screen_height / m_data.size()) * (*it);
+            if(it == itr)
+            {
+                height = screen_height;
+            }
 
             sf::RectangleShape shape(sf::Vector2f(width, height));
-            shape.setPosition(i * width, screen_height - height);
+            shape.setPosition(std::distance(m_data.begin(), it) * width, screen_height - height);
             target.draw(shape);
         }
+        return;
     }
 };
 
@@ -46,15 +53,13 @@ int main() {
     window.setFramerateLimit(60);
 
     Sorter sorter;
-    bool progress = false;
     do
     {
-        progress = sorter.next();
         window.clear();
         window.draw(sorter);
         window.display();
     }
-    while(!progress);
+    while(1);
     std::cout << "Sorted.\n";
     return 0;
 }
