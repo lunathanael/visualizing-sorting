@@ -17,6 +17,7 @@ namespace vis
 
         T pivot, i, j;
         bool pivoted;
+        bool sorted;
         QuickSort<T>* l;
         QuickSort<T>* r;
 
@@ -25,11 +26,12 @@ namespace vis
             : itr1(begin)
             , itr2(end)
             , pivoted(false)
+            , sorted(false)
         {
-            pivot = itr1, i = itr1, j = std::next(itr1, 1);
+            pivot = itr1, i = itr1, j = itr1;
         };
 
-        bool next();
+        T next();
     };
 
     template <typename T, typename RNG>
@@ -54,35 +56,43 @@ namespace vis
 
 
 template <typename T>
-bool vis::QuickSort<T>::next()
+T vis::QuickSort<T>::next()
 {
     if(std::distance(itr1, itr2) < 1)
     {
-        return true;
+        return itr2;
     }
 
     if(pivoted)
     {
-        return (l->next() && r->next());
+        j = l->next();
+        if(j == i)
+        {
+            j = r->next();
+            if(j == itr2)
+            {
+                sorted = true;
+            }
+        }
+        return j;
     }
 
-    while (std::distance(j, itr2) > 0)
+    while (std::distance(j, itr2) > 1)
     {
+        std::advance(j,1);
         if((*j) < (*pivot))
         {
             std::advance(i, 1);
             std::swap(*i, *j);
-            std::advance(j,1);
-            return false;
+            return j;
         }
-        std::advance(j, 1);
     }
     std::iter_swap(i, pivot);
     l = new QuickSort{itr1, i};
     r = new QuickSort{std::next(i, 1), itr2};
     pivoted = true;
 
-    return false;
+    return i;
 }
 
 

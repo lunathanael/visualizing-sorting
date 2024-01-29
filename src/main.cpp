@@ -26,7 +26,7 @@ public:
         q = new vis::QuickSort{m_data.begin(), m_data.end()};
     }
 
-    inline bool next() {return q->next(); };
+    inline bool next() {return q->next() == m_data.end(); };
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override {
         // origin = bottom left
@@ -55,5 +55,6 @@ int main() {
         window.display();
     }
     while(!progress);
+    std::cout << "Sorted.\n";
     return 0;
 }
