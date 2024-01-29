@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Language server files
+.cache
+
+# Build directory
+build
