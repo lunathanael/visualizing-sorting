@@ -53,7 +53,7 @@ bool vis::QuickSort<T>::next()
         return true;
     }
 
-    T pivot = itr1, i = first, j = first;
+    T pivot = itr1, i = itr1, j = itr1;
     std::advance(j, 1);
     while (j < itr2)
     {

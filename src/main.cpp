@@ -1,33 +1,53 @@
+#include <array>
+#include <cstddef>
 #include <iostream>
-#include <vector>
-#include <random>
+#include <numeric>
 
 #include <SFML/Graphics.hpp>
 #include <src/sorting.hpp>
+#include <random>
 
+constexpr int screen_width = 800;
+constexpr int screen_height = 600;
+
+class Sorter : public sf::Drawable {
+private:
+    std::array<int, 5> m_data;
+    std::mt19937 gen;
+
+public:
+    Sorter() {
+        std::iota(m_data.begin(), m_data.end(), 0);
+    }
+
+    void shuffle() {std::shuffle(m_data.begin(), m_data.end(), gen); };
+    bool is_sorted() const {return std::is_sorted(m_data.begin(), m_data.end()); };
+
+    void draw(sf::RenderTarget &target, sf::RenderStates states) const override {
+        // origin = bottom left
+        for (std::size_t i = 0; i < m_data.size(); ++i) {
+            int width = screen_width / m_data.size();
+            int height = (screen_height / m_data.size()) * m_data[i];
+
+            sf::RectangleShape shape(sf::Vector2f(width, height));
+            shape.setPosition(i * width, screen_height - height);
+            target.draw(shape);
+        }
+    }
+};
 
 int main() {
+    sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "Sorting");
+    window.setFramerateLimit(60);
 
-    constexpr int n = 8;
-    std::vector<int> v(n);
-    
-    std::mt19937 rng;
-
-    std::iota(v.begin(), v.end(), 0);
-    std::shuffle(v.begin(), v.end(), rng);
-
-    vis::BogoSort bs{v.begin(), v.end(), rng};
-
-    bool ended = false;
+    Sorter sorter;
     do
     {
-        ended = bs.next();
-        for(auto & a : v)
-        {
-            std::cout << a << ' ';
-        }
-        std::cout << '\n';
+        sorter.shuffle();
+        window.clear();
+        window.draw(sorter);
+        window.display();
     }
-    while(!ended);
+    while(!sorter.is_sorted());
     return 0;
 }
