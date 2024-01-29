@@ -52,6 +52,27 @@ namespace vis
         bool next();
     };
 
+
+    template <typename T>
+    class BubbleSort 
+    {
+    private:
+        T itr1;
+        T itr2;
+
+        T curr;
+        bool swapped;
+
+    public:
+        BubbleSort(const T begin, const T end)
+            : itr1(begin)
+            , itr2(end)
+            , curr(begin)
+        {};
+
+        T next();
+    };
+
 };
 
 
@@ -93,6 +114,33 @@ T vis::QuickSort<T>::next()
     pivoted = true;
 
     return i;
+}
+
+template <typename T>
+T vis::BubbleSort<T>::next()
+{
+    if(std::distance(itr1, itr2) < 1)
+    {
+        return itr2;
+    }
+
+    while(swapped || std::distance(curr, itr2) > 0)
+    {
+        if(std::distance(curr, itr2) == 1 && swapped)
+        {
+            swapped = false;
+            curr = itr1;
+        }
+        std::advance(curr, 1);
+        if((*std::next(curr, -1)) > (*curr))
+        {
+            std::swap((*curr), (*std::prev(curr, 1)));
+            swapped = true;
+            return curr;
+        }
+    }
+
+    return itr2;
 }
 
 
