@@ -33,6 +33,7 @@
 
 # Language server files
 .cache
+.vscode
 
 # Build directory
 build
