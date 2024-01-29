@@ -5,4 +5,7 @@
 # |_| |_| |_|\___||___/\___/|_| |_(_)_.__/ \__,_|_|_|\__,_|
 
 project('visualizing-sorting', 'cpp')
-executable('visort', 'src/main.cpp')
+
+sfmldep = dependency('sfml-all')
+
+executable('visort', 'src/main.cpp', dependencies : sfmldep)
