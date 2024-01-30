@@ -22,7 +22,7 @@ private:
 public:
     Sorter()
     {
-        m_data.resize(1000);
+        m_data.resize(3);
         std::iota(m_data.begin(), m_data.end(), 0);
         std::shuffle(m_data.begin(), m_data.end(), gen);
         q = new vis::BogoSort{m_data.begin(), m_data.end(), gen};

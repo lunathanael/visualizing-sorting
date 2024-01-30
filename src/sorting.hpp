@@ -147,11 +147,11 @@ T vis::BubbleSort<T>::next()
 template <typename T, typename RNG>
 T vis::BogoSort<T, RNG>::next()
 {
-    std::shuffle(itr1, itr2, rng);
     if (std::is_sorted(itr1, itr2))
     {
         return itr2;
     }
+    std::shuffle(itr1, itr2, rng);
     return itr1;
 }
 
