@@ -17,15 +17,15 @@ class Sorter : public sf::Drawable {
 private:
     std::vector<int> m_data;
     std::mt19937 gen;
-    vis::BubbleSort<std::vector<int>::iterator> *q;
+    vis::BogoSort<std::vector<int>::iterator, std::mt19937> *q;
 
 public:
     Sorter()
     {
-        m_data.resize(1080);
+        m_data.resize(1000);
         std::iota(m_data.begin(), m_data.end(), 0);
         std::shuffle(m_data.begin(), m_data.end(), gen);
-        q = new vis::BubbleSort{m_data.begin(), m_data.end()};
+        q = new vis::BogoSort{m_data.begin(), m_data.end(), gen};
     }
 
     inline bool next() {return q->next() == m_data.end(); };

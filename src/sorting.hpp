@@ -49,7 +49,7 @@ namespace vis
             , rng(rng)
         {};
 
-        bool next();
+        T next();
     };
 
 
@@ -145,10 +145,14 @@ T vis::BubbleSort<T>::next()
 
 
 template <typename T, typename RNG>
-bool vis::BogoSort<T, RNG>::next()
+T vis::BogoSort<T, RNG>::next()
 {
     std::shuffle(itr1, itr2, rng);
-    return std::is_sorted(itr1, itr2);
+    if (std::is_sorted(itr1, itr2))
+    {
+        return itr2;
+    }
+    return itr1;
 }
 
 #endif
