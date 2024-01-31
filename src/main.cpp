@@ -4,6 +4,7 @@
 #include <memory>
 #include <numeric>
 #include <random>
+#include <vector>
 
 #include <SFML/Graphics.hpp>
 
@@ -45,6 +46,7 @@ int main() {
         window.draw(sorter);
         window.display();
     }
+
 
     return 0;
 }
