@@ -4,6 +4,8 @@
 namespace vis::backend {
     template <typename Iterator> class Sorter {
     public:
+        virtual ~Sorter() = default;
+
         virtual Iterator begin() const = 0;
         virtual Iterator end() const = 0;
         virtual bool is_done() const = 0;
