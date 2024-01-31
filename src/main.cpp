@@ -18,7 +18,7 @@ int main() {
 
     window.setFramerateLimit(60);
 
-    constexpr std::size_t n = 7;
+    constexpr std::size_t n = 700;
 
     std::vector<int> numbers(n);
     std::mt19937 random;
@@ -26,9 +26,7 @@ int main() {
     std::iota(numbers.begin(), numbers.end(), 1);
     std::shuffle(numbers.begin(), numbers.end(), random);
 
-    auto bs = std::make_unique<vis::BogoSort<std::vector<int>::iterator, std::mt19937>>(numbers.begin(),
-                                                                                        numbers.end(),
-                                                                                        random);
+    auto bs = std::make_unique<vis::QuickSort<std::vector<int>::iterator>>(numbers.begin(), numbers.end());
     vis::frontend::Sorter<std::vector<int>::iterator> sorter(std::move(bs));
 
     while (window.isOpen()) {

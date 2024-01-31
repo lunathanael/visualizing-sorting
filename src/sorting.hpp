@@ -8,7 +8,7 @@
 #include "vis/backend/sorter.hpp"
 
 namespace vis {
-    template <typename T> class QuickSort {
+    template <typename T> class QuickSort : public vis::backend::Sorter<T> {
     private:
         T itr1;
         T itr2;
@@ -16,8 +16,8 @@ namespace vis {
         T pivot, i, j;
         bool pivoted;
         bool sorted;
-        QuickSort<T> *l;
-        QuickSort<T> *r;
+        QuickSort<T> *l = nullptr;
+        QuickSort<T> *r = nullptr;
 
     public:
         QuickSort(const T begin, const T end)
@@ -28,7 +28,15 @@ namespace vis {
             pivot = itr1, i = itr1, j = itr1;
         };
 
-        T next();
+        ~QuickSort() override {
+            delete l;
+            delete r;
+        }
+
+        T begin() const override;
+        T end() const override;
+        bool is_done() const override;
+        T next() override;
     };
 
     template <typename T, typename RNG> class BogoSort : public vis::backend::Sorter<T> {
@@ -67,6 +75,18 @@ namespace vis {
     };
 
 };
+
+template <typename T> T vis::QuickSort<T>::begin() const {
+    return itr1;
+}
+
+template <typename T> T vis::QuickSort<T>::end() const {
+    return itr2;
+}
+
+template <typename T> bool vis::QuickSort<T>::is_done() const {
+    return std::is_sorted(begin(), end());
+}
 
 template <typename T> T vis::QuickSort<T>::next() {
     if (std::distance(itr1, itr2) < 1) {
