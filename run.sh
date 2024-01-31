@@ -1,4 +1,4 @@
 #!/bin/sh
 
-meson compile -C build
-build/visort
+# Only run the newly-compiled binary if the compilation succeeded
+meson compile -C build && build/visort

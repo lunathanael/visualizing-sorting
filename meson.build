@@ -6,6 +6,12 @@
 
 project('visualizing-sorting', 'cpp')
 
-sfmldep = dependency('sfml-all')
+visort_sources = [
+  'src/main.cpp',
+  ]
 
-executable('visort', 'src/main.cpp', dependencies : sfmldep)
+visort_incdirs = include_directories('include')
+
+executable('visort', visort_sources,
+  dependencies : dependency('sfml-all'),
+  include_directories : visort_incdirs)

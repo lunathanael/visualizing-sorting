@@ -1,66 +1,50 @@
 #include <array>
 #include <cstddef>
 #include <iostream>
+#include <memory>
 #include <numeric>
-
-#include <SFML/Graphics.hpp>
 #include <random>
 
-constexpr int screen_width = 800;
-constexpr int screen_height = 600;
+#include <SFML/Graphics.hpp>
 
-class Sorter : public sf::Drawable {
-private:
-    std::array<int, 32> m_data;
-
-public:
-    Sorter() {
-        std::iota(m_data.begin(), m_data.end(), 1);
-        std::mt19937 gen;
-        std::shuffle(m_data.begin(), m_data.end(), gen);
-    }
-
-    void draw(sf::RenderTarget &target, sf::RenderStates states) const override {
-        // origin = bottom left
-        for (std::size_t i = 0; i < m_data.size(); ++i) {
-            int width = screen_width / m_data.size();
-            int height = screen_height * m_data[i] / m_data.size();
-
-            sf::RectangleShape shape(sf::Vector2f(width, height));
-            shape.setPosition(i * width, screen_height - height);
-            target.draw(shape);
-        }
-    }
-};
+#include "sorting.hpp"
+#include "vis/frontend/sorter.hpp"
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(screen_width, screen_height), "Sorting", sf::Style::Close);
+    sf::RenderWindow window(
+        sf::VideoMode(
+            vis::frontend::screen_width,
+            vis::frontend::screen_height),
+        "Sorting",
+        sf::Style::Close);
+
     window.setFramerateLimit(60);
 
-    Sorter sorter;
+    constexpr std::size_t n = 7;
 
-    constexpr int n = 8;
-    std::vector<int> v(n);
-    
-    std::mt19937 rng;
+    std::vector<int> numbers(n); 
+    std::mt19937 random;
 
-    std::iota(v.begin(), v.end(), 0);
-    std::shuffle(v.begin(), v.end(), rng);
+    std::iota(numbers.begin(), numbers.end(), 1);
+    std::shuffle(numbers.begin(), numbers.end(), random);
 
-    vis::BogoSort bs{v.begin(), v.end(), rng};
+    auto bs = std::make_unique<vis::BogoSort<std::vector<int>::iterator, std::mt19937>>(numbers.begin(), numbers.end(), random);
+    vis::frontend::Sorter<std::vector<int>::iterator> sorter(std::move(bs));
 
-    bool ended = false;
-    do
-    {
-        ended = bs.next();
-        for(auto & a : v)
-        {
-            std::cout << a << ' ';
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
         }
+
+        sorter.update();
+
         window.clear();
         window.draw(sorter);
         window.display();
     }
-    while(!ended);
+
     return 0;
 }
