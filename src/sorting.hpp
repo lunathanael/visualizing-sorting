@@ -152,7 +152,7 @@ T vis::BogoSort<T, RNG>::next()
         return itr2;
     }
     std::shuffle(itr1, itr2, rng);
-    return itr1;
+    return itr2 + 1;
 }
 
 #endif
