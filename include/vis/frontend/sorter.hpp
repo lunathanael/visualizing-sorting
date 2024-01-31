@@ -2,8 +2,8 @@
 #define VIS_FRONTEND_SORTER_HPP
 
 #include <algorithm>
-#include <memory>
 #include <iterator>
+#include <memory>
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>

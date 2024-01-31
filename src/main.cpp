@@ -12,24 +12,23 @@
 #include "vis/frontend/sorter.hpp"
 
 int main() {
-    sf::RenderWindow window(
-        sf::VideoMode(
-            vis::frontend::screen_width,
-            vis::frontend::screen_height),
-        "Sorting",
-        sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(vis::frontend::screen_width, vis::frontend::screen_height),
+                            "Sorting",
+                            sf::Style::Close);
 
     window.setFramerateLimit(60);
 
     constexpr std::size_t n = 7;
 
-    std::vector<int> numbers(n); 
+    std::vector<int> numbers(n);
     std::mt19937 random;
 
     std::iota(numbers.begin(), numbers.end(), 1);
     std::shuffle(numbers.begin(), numbers.end(), random);
 
-    auto bs = std::make_unique<vis::BogoSort<std::vector<int>::iterator, std::mt19937>>(numbers.begin(), numbers.end(), random);
+    auto bs = std::make_unique<vis::BogoSort<std::vector<int>::iterator, std::mt19937>>(numbers.begin(),
+                                                                                        numbers.end(),
+                                                                                        random);
     vis::frontend::Sorter<std::vector<int>::iterator> sorter(std::move(bs));
 
     while (window.isOpen()) {
@@ -46,7 +45,6 @@ int main() {
         window.draw(sorter);
         window.display();
     }
-
 
     return 0;
 }
