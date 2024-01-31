@@ -31,8 +31,9 @@
 *.out
 *.app
 
-# Language server files
+# Language server and IDE files
 .cache
+.vscode
 
 # Build directory
 build
