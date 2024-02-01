@@ -3,7 +3,9 @@
 import subprocess
 
 SOURCES = ["src/main.cpp"]
-HEADERS = ["src/sorting.hpp",
+HEADERS = ["include/vis/backend/bogo_sorter.hpp",
+           "include/vis/backend/bubble_sorter.hpp",
+           "include/vis/backend/quick_sorter.hpp",
            "include/vis/backend/sorter.hpp",
            "include/vis/frontend/sorter.hpp"]
 

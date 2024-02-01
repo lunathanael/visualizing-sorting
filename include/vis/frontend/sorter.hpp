@@ -28,7 +28,7 @@ namespace vis::frontend {
         void draw(sf::RenderTarget &target, sf::RenderStates states) const override {
             Iterator begin = m_sorter->begin();
             Iterator end = m_sorter->end();
-            std::size_t length = std::distance(begin, end); 
+            std::size_t length = std::distance(begin, end);
             float width = screen_width / length;
 
             for (Iterator it = begin; it != end; ++it) {
