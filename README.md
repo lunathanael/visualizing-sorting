@@ -1,6 +1,6 @@
 # Visualizing Sorting Algorithms
 
-<video src="resources/quicksort.mp4" width="720" height="405" controls></video>
+https://github.com/lunathanael/visualizing-sorting/assets/84255305/15ff4859-7d44-4427-9f07-4d7df815da3b
 
 Everybody and their mother have certainly seen those YouTube videos of the
 sorting algorithms moving the bars around so you get to see what each one does.
