@@ -3,32 +3,32 @@
 
 #include "vis/backend/sorter.hpp"
 #include <algorithm>
+#include <stack>
+#include <utility>
 
 namespace vis::backend {
     template <typename T> class QuickSort : public vis::backend::Sorter<T> {
     private:
         T itr1;
         T itr2;
-
-        T pivot, i, j;
-        bool pivoted;
         bool sorted;
-        QuickSort<T> *l = nullptr;
-        QuickSort<T> *r = nullptr;
+
+        T l, r, i, j;
+        std::stack<std::pair<T, T>> st;
 
     public:
         QuickSort(const T begin, const T end)
             : itr1(begin)
             , itr2(end)
-            , pivoted(false)
-            , sorted(false) {
-            pivot = itr1, i = itr1, j = itr1;
-        };
+            , sorted(false)
+            
+            , l(begin)
+            , r(end)
+            , i(begin)
+            , j(begin)
+        {};
 
-        ~QuickSort() override {
-            delete l;
-            delete r;
-        }
+        ~QuickSort() override {};
 
         T begin() const override { return itr1; }
 
@@ -37,36 +37,43 @@ namespace vis::backend {
         bool is_done() const override { return sorted; }
 
         T next() override {
-            if (std::distance(itr1, itr2) < 1) {
+            if (sorted)
+            {
                 return itr2;
             }
 
-            if (pivoted) {
-                j = l->next();
-                if (j == i) {
-                    j = r->next();
-                    if (j == itr2) {
-                        sorted = true;
-                    }
+            if (j == r)
+            {
+                std::iter_swap(i, l);   
+                if (std::distance(std::next(i, 1), r) > 1)
+                {
+                    st.push(std::make_pair(std::next(i, 1), r));
                 }
-                return j;
+                if (std::distance(l, i) > 1)
+                {
+                    st.push(std::make_pair(l, i));
+                }
+                
+                if (st.empty())
+                {
+                    sorted = true;
+                    return itr2;
+                }
+                l = st.top().first;
+                r = st.top().second;
+                i = l;
+                j = l;
+                st.pop();   
             }
 
-            while (std::distance(j, itr2) > 1) {
-                std::advance(j, 1);
-                if ((*j) < (*pivot)) {
-                    std::advance(i, 1);
-                    std::swap(*i, *j);
-                    return j;
-                }
+            if ((*j) < (*l))
+            {
+                std::advance(i, 1);
+                std::iter_swap(i, j);
             }
+            std::advance(j, 1);
 
-            std::iter_swap(i, pivot);
-            l = new QuickSort{itr1, i};
-            r = new QuickSort{std::next(i, 1), itr2};
-            pivoted = true;
-
-            return i;
+            return j;
         }
     };
 }
