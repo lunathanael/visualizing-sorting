@@ -44,7 +44,11 @@ namespace vis::frontend {
         }
 
         void draw_marker(float width, sf::RenderTarget &target) const {
-            sf::RectangleShape marker(sf::Vector2f(width, screen_height));
+            // This needs to be done to ensure that the marker can still be seen
+            // even when the array contains very many elements.
+            float marker_width = std::max(width, 1.0f);
+
+            sf::RectangleShape marker(sf::Vector2f(marker_width, screen_height));
             marker.setFillColor(sf::Color(0xff, 0x00, 0x00));
             marker.setPosition(std::distance(m_sorter->begin(), m_position) * width, 0);
             target.draw(marker);

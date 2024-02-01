@@ -18,7 +18,7 @@ int main() {
 
     window.setFramerateLimit(60);
 
-    constexpr std::size_t n = 700;
+    constexpr std::size_t n = 200;
 
     std::vector<int> numbers(n);
     std::mt19937 random;
