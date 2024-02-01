@@ -8,8 +8,19 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "sorting.hpp"
+#include "vis/backend/quick_sorter.hpp"
 #include "vis/frontend/sorter.hpp"
+
+using Container = std::array<int, 200>;
+using Iterator = Container::iterator;
+using Sorter = vis::backend::QuickSort<Iterator>;
+
+Container create_data() {
+    Container data;
+    std::iota(data.begin(), data.end(), 1);
+    std::shuffle(data.begin(), data.end(), std::mt19937 {});
+    return data;
+}
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(vis::frontend::screen_width, vis::frontend::screen_height),
@@ -18,16 +29,9 @@ int main() {
 
     window.setFramerateLimit(60);
 
-    constexpr std::size_t n = 200;
-
-    std::vector<int> numbers(n);
-    std::mt19937 random;
-
-    std::iota(numbers.begin(), numbers.end(), 1);
-    std::shuffle(numbers.begin(), numbers.end(), random);
-
-    auto bs = std::make_unique<vis::QuickSort<std::vector<int>::iterator>>(numbers.begin(), numbers.end());
-    vis::frontend::Sorter<std::vector<int>::iterator> sorter(std::move(bs));
+    Container numbers = create_data();
+    std::unique_ptr<Sorter> backend = std::make_unique<Sorter>(numbers.begin(), numbers.end());
+    vis::frontend::Sorter<Iterator> frontend(std::move(backend));
 
     while (window.isOpen()) {
         sf::Event event;
@@ -37,10 +41,10 @@ int main() {
             }
         }
 
-        sorter.update();
+        frontend.update();
 
         window.clear();
-        window.draw(sorter);
+        window.draw(frontend);
         window.display();
     }
 
