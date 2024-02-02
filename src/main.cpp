@@ -13,27 +13,25 @@
 #include "vis/frontend/config.hpp"
 #include "vis/frontend/sorter.hpp"
 
-using Container = std::array<int, 200>;
+using Container = std::vector<int>;
 using Iterator = Container::iterator;
 
-Container create_data() {
-    Container data;
+Container create_data(std::size_t num_elements) {
+    // Brace initialization can't be used because the std::initializer_list
+    // constructor takes priority.
+    Container data(num_elements);
     std::iota(data.begin(), data.end(), 1);
     std::shuffle(data.begin(), data.end(), std::mt19937{});
     return data;
 }
 
 int main(int argc, char **argv) {
-    sf::RenderWindow window(sf::VideoMode(vis::frontend::screen_width, vis::frontend::screen_height),
-                            "Sorting",
-                            sf::Style::Close);
-
-    window.setFramerateLimit(60);
-
-    Container numbers = create_data();
+    // This needs to be set up before the window or else the command line args
+    // won't be parsed until after the window was already created.
+    vis::frontend::Config config = vis::frontend::parse_args(argc, argv);
+    Container numbers = create_data(config.num_elements);
     std::unique_ptr<vis::backend::Sorter<Iterator>> backend;
 
-    vis::frontend::Config config = vis::frontend::parse_args(argc, argv);
     switch (config.sorter_kind) {
     case vis::frontend::SorterKind::BogoSort:
         backend = std::make_unique<vis::backend::BogoSort<Iterator, std::mt19937>>(numbers.begin(),
@@ -46,6 +44,12 @@ int main(int argc, char **argv) {
     }
 
     vis::frontend::Sorter<Iterator> frontend{std::move(backend)};
+
+    sf::RenderWindow window(sf::VideoMode(vis::frontend::screen_width, vis::frontend::screen_height),
+                            "Sorting",
+                            sf::Style::Close);
+
+    window.setFramerateLimit(120);
 
     while (window.isOpen()) {
         sf::Event event;

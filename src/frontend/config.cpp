@@ -1,23 +1,42 @@
 #include "vis/frontend/config.hpp"
-#include "vis/backend/quick_sorter.hpp"
 
+#include <cstddef>
 #include <cstdlib>
 #include <cstring>
+#include <exception>
 #include <iostream>
 #include <memory>
 #include <numeric>
 #include <optional>
 #include <random>
+#include <string>
+
+#include "vis/backend/quick_sorter.hpp"
 
 namespace vis::frontend {
+    static void print_usage_and_exit(const char *program) {
+        std::cerr << "Usage: " << program << " [--elements n] [--sorter bogosort|quicksort]\n";
+        std::exit(1);
+    }
+
     Config parse_args(int argc, char **argv) {
         std::optional<SorterKind> sorter_kind;
+        std::optional<std::size_t> num_elements;
 
         for (int i = 1; i < argc; ++i) {
-            if (std::strcmp(argv[i], "--sorter") == 0) {
+            if (std::strcmp(argv[i], "--elements") == 0) {
                 if (++i >= argc) {
-                    std::cerr << "Expected sorter type\n";
-                    std::exit(1);
+                    print_usage_and_exit(argv[0]);
+                }
+
+                try {
+                    num_elements = std::make_optional(std::stol(argv[i]));
+                } catch (const std::exception &e) {
+                    print_usage_and_exit(argv[0]);
+                }
+            } else if (std::strcmp(argv[i], "--sorter") == 0) {
+                if (++i >= argc) {
+                    print_usage_and_exit(argv[0]);
                 }
 
                 if (std::strcmp(argv[i], "bogosort") == 0) {
@@ -26,17 +45,10 @@ namespace vis::frontend {
                     sorter_kind = std::make_optional(SorterKind::QuickSort);
                 }
             } else {
-                std::cerr << "Unexpected argument\n";
-                std::exit(1);
+                print_usage_and_exit(argv[0]);
             }
         }
 
-        // If no sorter was specified on the command line, use quicksort by
-        // default.
-        if (!sorter_kind.has_value()) {
-            sorter_kind = std::make_optional(SorterKind::QuickSort);
-        }
-
-        return {sorter_kind.value()};
+        return {sorter_kind.value_or(SorterKind::QuickSort), num_elements.value_or(200)};
     }
 }

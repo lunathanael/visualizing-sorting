@@ -24,7 +24,8 @@ incdirs = include_directories('include')
 
 executable('visort', sources,
   dependencies: dependency('sfml-all'),
-  include_directories: incdirs)
+  include_directories: incdirs,
+  )
 
 custom_target('format',
   build_by_default: true,
