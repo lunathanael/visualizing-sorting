@@ -6,13 +6,15 @@
 
 project('visualizing-sorting', 'cpp')
 
-visort_sources = [
-  'src/main.cpp',
-  'src/frontend/config.cpp',
-  ]
+sources = files('src/main.cpp', 'src/frontend/config.cpp')
+incdirs = include_directories('include')
 
-visort_incdirs = include_directories('include')
+executable('visort', sources,
+  dependencies: dependency('sfml-all'),
+  include_directories: incdirs)
 
-executable('visort', visort_sources,
-  dependencies : dependency('sfml-all'),
-  include_directories : visort_incdirs)
+custom_target('format',
+  input: sources,
+  output: 'stdout',
+  command: ['clang-format', '-i', '@INPUT@'],
+  build_by_default: true)
