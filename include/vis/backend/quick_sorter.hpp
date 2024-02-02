@@ -28,8 +28,6 @@ namespace vis::backend {
             , j(begin)
         {};
 
-        ~QuickSort() override {};
-
         T begin() const override { return itr1; }
 
         T end() const override { return itr2; }
