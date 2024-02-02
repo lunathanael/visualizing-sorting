@@ -1,10 +1,11 @@
 #ifndef VIS_BACKEND_QUICK_SORTER_HPP
 #define VIS_BACKEND_QUICK_SORTER_HPP
 
-#include "vis/backend/sorter.hpp"
 #include <algorithm>
 #include <stack>
 #include <utility>
+
+#include "vis/backend/sorter.hpp"
 
 namespace vis::backend {
     template <typename T> class QuickSort : public vis::backend::Sorter<T> {
@@ -21,12 +22,11 @@ namespace vis::backend {
             : itr1(begin)
             , itr2(end)
             , sorted(false)
-            
+
             , l(begin)
             , r(end)
             , i(begin)
-            , j(begin)
-        {};
+            , j(begin){};
 
         T begin() const override { return itr1; }
 
@@ -35,25 +35,20 @@ namespace vis::backend {
         bool is_done() const override { return sorted; }
 
         T next() override {
-            if (sorted)
-            {
+            if (sorted) {
                 return itr2;
             }
 
-            if (j == r)
-            {
-                std::iter_swap(i, l);   
-                if (std::distance(std::next(i, 1), r) > 1)
-                {
+            if (j == r) {
+                std::iter_swap(i, l);
+                if (std::distance(std::next(i, 1), r) > 1) {
                     st.push(std::make_pair(std::next(i, 1), r));
                 }
-                if (std::distance(l, i) > 1)
-                {
+                if (std::distance(l, i) > 1) {
                     st.push(std::make_pair(l, i));
                 }
-                
-                if (st.empty())
-                {
+
+                if (st.empty()) {
                     sorted = true;
                     return itr2;
                 }
@@ -61,11 +56,10 @@ namespace vis::backend {
                 r = st.top().second;
                 i = l;
                 j = l;
-                st.pop();   
+                st.pop();
             }
 
-            if ((*j) < (*l))
-            {
+            if ((*j) < (*l)) {
                 std::advance(i, 1);
                 std::iter_swap(i, j);
             }

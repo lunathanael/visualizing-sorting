@@ -16,8 +16,7 @@ namespace vis::backend {
         BogoSort(const T begin, const T end, const RNG rng)
             : itr1(begin)
             , itr2(end)
-            , rng(rng) 
-        {}
+            , rng(rng) {}
 
         T begin() const override { return itr1; }
 
@@ -25,7 +24,10 @@ namespace vis::backend {
 
         bool is_done() const override { return std::is_sorted(itr1, itr2); }
 
-        T next() override { std::shuffle(itr1, itr2, rng); return itr2; }
+        T next() override {
+            std::shuffle(itr1, itr2, rng);
+            return itr2;
+        }
     };
 }
 
