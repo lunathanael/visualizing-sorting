@@ -6,12 +6,12 @@
 #include <iostream>
 #include <memory>
 #include <numeric>
+#include <optional>
 #include <random>
 
 namespace vis::frontend {
     Config parse_args(int argc, char **argv) {
-        Config config;
-        bool got_sorter = false;
+        std::optional<SorterKind> sorter_kind;
 
         for (int i = 1; i < argc; ++i) {
             if (std::strcmp(argv[i], "--sorter") == 0) {
@@ -20,28 +20,23 @@ namespace vis::frontend {
                     std::exit(1);
                 }
 
-                if (got_sorter) {
-                    continue;
-                }
-
                 if (std::strcmp(argv[i], "bogosort") == 0) {
-                    config.sorter_kind = SorterKind::BogoSort;
+                    sorter_kind = std::make_optional(SorterKind::BogoSort);
                 } else if (std::strcmp(argv[i], "quicksort") == 0) {
-                    config.sorter_kind = SorterKind::QuickSort;
+                    sorter_kind = std::make_optional(SorterKind::QuickSort);
                 }
-
-                got_sorter = true;
             } else {
                 std::cerr << "Unexpected argument\n";
                 std::exit(1);
             }
         }
 
-        if (!got_sorter) {
-            std::cerr << "Expected a sorter to be specified\n";
-            std::exit(1);
+        // If no sorter was specified on the command line, use quicksort by
+        // default.
+        if (!sorter_kind.has_value()) {
+            sorter_kind = std::make_optional(SorterKind::QuickSort);
         }
 
-        return config;
+        return {sorter_kind.value()};
     }
 }

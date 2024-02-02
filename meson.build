@@ -6,7 +6,20 @@
 
 project('visualizing-sorting', 'cpp')
 
-sources = files('src/main.cpp', 'src/frontend/config.cpp')
+sources = files(
+  'src/main.cpp',
+  'src/frontend/config.cpp',
+  )
+
+headers = files(
+  'include/vis/backend/bogo_sorter.hpp',
+  'include/vis/backend/bubble_sorter.hpp',
+  'include/vis/backend/quick_sorter.hpp',
+  'include/vis/backend/sorter.hpp',
+  'include/vis/frontend/config.hpp',
+  'include/vis/frontend/sorter.hpp',
+  )
+
 incdirs = include_directories('include')
 
 executable('visort', sources,
@@ -14,7 +27,8 @@ executable('visort', sources,
   include_directories: incdirs)
 
 custom_target('format',
-  input: sources,
-  output: 'stdout',
+  build_by_default: true,
   command: ['clang-format', '-i', '@INPUT@'],
-  build_by_default: true)
+  input: [sources, headers],
+  output: 'stdout',
+  )
