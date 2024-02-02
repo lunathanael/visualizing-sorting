@@ -8,6 +8,7 @@ project('visualizing-sorting', 'cpp')
 
 visort_sources = [
   'src/main.cpp',
+  'src/frontend/config.cpp',
   ]
 
 visort_incdirs = include_directories('include')

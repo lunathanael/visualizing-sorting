@@ -7,6 +7,7 @@
 
 namespace vis::frontend {
     enum class SorterKind {
+        BogoSort,
         QuickSort,
     };
 
@@ -14,8 +15,7 @@ namespace vis::frontend {
         SorterKind sorter_kind;
     };
 
-    std::vector<std::string> create_args(int argc, char **argv);
-    Config parse_args(const std::vector<std::string> &args);
+    Config parse_args(int argc, char **argv);
 }
 
 #endif

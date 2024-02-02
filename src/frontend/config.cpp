@@ -11,20 +11,37 @@
 namespace vis::frontend {
     Config parse_args(int argc, char **argv) {
         Config config;
-        std::iota(config.data.begin(), config.data.end(), 1);
-        std::shuffle(config.data.begin(), config.data.end(), std::mt19937 {});
-        
+        bool got_sorter = false;
+
         for (int i = 1; i < argc; ++i) {
             if (std::strcmp(argv[i], "--sorter") == 0) {
-                if (i + 1 >= argc) {
+                if (++i >= argc) {
                     std::cerr << "Expected sorter type\n";
                     std::exit(1);
                 }
-                if (std::strcmp(argv[i + 1], "quick") == 0) {
-                    config.sorter = std::make_unique<backend::QuickSort<Iterator>>(config.data.begin(), config.data.end());
+
+                if (got_sorter) {
+                    continue;
                 }
+
+                if (std::strcmp(argv[i], "bogosort") == 0) {
+                    config.sorter_kind = SorterKind::BogoSort;
+                } else if (std::strcmp(argv[i], "quicksort") == 0) {
+                    config.sorter_kind = SorterKind::QuickSort;
+                }
+
                 got_sorter = true;
+            } else {
+                std::cerr << "Unexpected argument\n";
+                std::exit(1);
             }
         }
+
+        if (!got_sorter) {
+            std::cerr << "Expected a sorter to be specified\n";
+            std::exit(1);
+        }
+
+        return config;
     }
 }
