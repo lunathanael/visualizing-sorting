@@ -9,6 +9,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "vis/backend/bogo_sorter.hpp"
+#include "vis/backend/insertion_sorter.hpp"
 #include "vis/backend/quick_sorter.hpp"
 #include "vis/frontend/config.hpp"
 #include "vis/frontend/sorter.hpp"
@@ -32,16 +33,18 @@ int main(int argc, char **argv) {
     Container numbers = create_data(config.num_elements);
     std::unique_ptr<vis::backend::Sorter<Iterator>> backend;
 
-    switch (config.sorter_kind) {
-    case vis::frontend::SorterKind::BogoSort:
-        backend = std::make_unique<vis::backend::BogoSort<Iterator, std::mt19937>>(numbers.begin(),
-                                                                                   numbers.end(),
-                                                                                   std::mt19937{});
-        break;
-    case vis::frontend::SorterKind::QuickSort:
-        backend = std::make_unique<vis::backend::QuickSort<Iterator>>(numbers.begin(), numbers.end());
-        break;
-    }
+    // switch (config.sorter_kind) {
+    // case vis::frontend::SorterKind::BogoSort:
+    //     backend = std::make_unique<vis::backend::BogoSort<Iterator, std::mt19937>>(numbers.begin(),
+    //                                                                                numbers.end(),
+    //                                                                                std::mt19937{});
+    //     break;
+    // case vis::frontend::SorterKind::QuickSort:
+    //     backend = std::make_unique<vis::backend::QuickSort<Iterator>>(numbers.begin(), numbers.end());
+    //     break;
+    // }
+
+    backend = std::make_unique<vis::backend::InsertionSorter<Iterator>>(numbers.begin(), numbers.end());
 
     vis::frontend::Sorter<Iterator> frontend{std::move(backend)};
 
