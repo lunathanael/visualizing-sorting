@@ -10,9 +10,7 @@ namespace vis::backend {
 
         virtual Iterator begin() const = 0;
         virtual Iterator end() const = 0;
-
         virtual bool is_done() const { return std::is_sorted(begin(), end()); }
-
         virtual Iterator next() = 0;
     };
 }
