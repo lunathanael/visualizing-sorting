@@ -9,6 +9,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "vis/backend/bogo_sorter.hpp"
+#include "vis/backend/bubble_sorter.hpp"
 #include "vis/backend/quick_sorter.hpp"
 #include "vis/frontend/config.hpp"
 #include "vis/frontend/sorter.hpp"
@@ -40,6 +41,10 @@ int main(int argc, char **argv) {
         break;
     case vis::frontend::SorterKind::QuickSort:
         backend = std::make_unique<vis::backend::QuickSort<Iterator>>(numbers.begin(), numbers.end());
+        break;
+
+    case vis::frontend::SorterKind::BubbleSort:
+        backend = std::make_unique<vis::backend::BubbleSort<Iterator>>(numbers.begin(), numbers.end());
         break;
     }
 

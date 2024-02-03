@@ -22,8 +22,6 @@ namespace vis::backend {
 
         T end() const override { return itr2; }
 
-        bool is_done() const override { return std::is_sorted(itr1, itr2); }
-
         T next() override {
             std::shuffle(itr1, itr2, rng);
             return itr2;

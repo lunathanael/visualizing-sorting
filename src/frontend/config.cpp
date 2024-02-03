@@ -11,6 +11,7 @@
 #include <random>
 #include <string>
 
+#include "vis/backend/bubble_sorter.hpp"
 #include "vis/backend/quick_sorter.hpp"
 
 namespace vis::frontend {
@@ -43,6 +44,8 @@ namespace vis::frontend {
                     sorter_kind = std::make_optional(SorterKind::BogoSort);
                 } else if (std::strcmp(argv[i], "quicksort") == 0) {
                     sorter_kind = std::make_optional(SorterKind::QuickSort);
+                } else if (std::strcmp(argv[i], "bubblesort") == 0) {
+                    sorter_kind = std::make_optional(SorterKind::BubbleSort);
                 }
             } else {
                 print_usage_and_exit(argv[0]);

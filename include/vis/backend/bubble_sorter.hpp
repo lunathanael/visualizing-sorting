@@ -6,7 +6,7 @@
 #include "vis/backend/sorter.hpp"
 
 namespace vis::backend {
-    template <typename T> class BubbleSort : vis::backend::Sorter<T> {
+    template <typename T> class BubbleSort : public vis::backend::Sorter<T> {
     private:
         T itr1;
         T itr2;
@@ -23,8 +23,6 @@ namespace vis::backend {
         inline T begin() const override { return itr1; }
 
         inline T end() const override { return itr2; }
-
-        inline bool is_sorted() const override { return std::is_sorted(itr1, itr2); }
 
         T next() override {
             if (std::distance(itr1, itr2) < 1) {
