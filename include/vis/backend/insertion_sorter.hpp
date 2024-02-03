@@ -26,15 +26,19 @@ namespace vis::backend {
         }
 
         Iter next() override {
-            if (std::distance(m_position, m_end) <= 0) {
+            if (std::distance(m_position, m_end) == 0) {
                 return m_position;
             }
             if (*m_insert_position <= *std::next(m_insert_position)) {
                 std::advance(m_position, 1);
                 m_insert_position = std::prev(m_position);
+                return m_position;
             }
             std::swap(*m_insert_position, *std::next(m_insert_position));
-            std::advance(m_insert_position, -1);
+            if (std::distance(m_begin, m_insert_position) > 0)
+            {
+                std::advance(m_insert_position, -1);
+            }
             return m_insert_position;
         }
     };
