@@ -2,21 +2,21 @@
 #define VIS_BACKEND_BOGO_SORTER_HPP
 
 #include <algorithm>
+#include <random>
 
 #include "vis/backend/sorter.hpp"
 
 namespace vis::backend {
-    template <typename T, typename RNG> class BogoSort : public vis::backend::Sorter<T> {
+    template <typename T, typename RNG = std::mt19937> class BogoSort : public vis::backend::Sorter<T> {
     private:
         T itr1;
         T itr2;
         RNG rng;
 
     public:
-        BogoSort(const T begin, const T end, const RNG rng)
+        BogoSort(T begin, T end)
             : itr1(begin)
-            , itr2(end)
-            , rng(rng) {}
+            , itr2(end) {}
 
         T begin() const override { return itr1; }
 

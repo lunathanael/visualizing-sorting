@@ -9,8 +9,8 @@
 namespace vis::frontend {
     enum class SorterKind {
         BogoSort,
-        QuickSort,
         BubbleSort,
+        QuickSort,
     };
 
     struct Config {
